@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import AppLayout from '../layouts/app-layout';
 import { Head } from '@inertiajs/react';
-import { Building, Contact, User } from 'lucide-react';
+import { Building, Contact, MapPin, User, X } from 'lucide-react';
 import ClientDetailsModal from './details/client-details';
+import { Button } from '@/components/ui/button';
 
 interface Client {
     id: number;
@@ -18,24 +19,34 @@ interface ClientsPageProps {
 
 export default function ClientsPage({ clients }: ClientsPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+    const [selectedClient, setSelectedClient] = useState<any>(null);
 
-    const openModal = (id: number) => {
-        setSelectedClientId(id);
-        setIsModalOpen(true);
+    const openModal = async (id: number) => {
+        try {
+            const response = await fetch(`/client/${id}`)
+            const data = await response.json()
+
+            setSelectedClient(data);
+            setIsModalOpen(true);
+        } catch (e) {
+            console.error("Error testFetch", e);
+        }
     };
 
     const testfetch = async (id: number) => {
         try {
             const response = await fetch(`/client/${id}`)
+            const data = await response.json()
+
+            setSelectedClient(data);
+            setIsModalOpen(true);
         } catch (e) {
-            console.error("AA");
+            console.error("Error testFetch", e);
         }
     }
 
-
     const closeModal = () => {
-        setSelectedClientId(null);
+        setSelectedClient(null);
         setIsModalOpen(false);
     }
 
@@ -46,10 +57,10 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                 <h2 className="text-xl font-semibold">Client Contacts</h2>
                 {/* Cards  */}
                 <div className="w-[50%] min-w-[50lvw] grid grid-cols-1 gap-4 mt-4">
-                    {clients.map((client) => (
+                    {clients.map((client, index) => (
                         <div
                             key={client.id}
-                            onClick={() => testfetch(client.id)}
+                            onClick={() => openModal(client.id)}
                             className="flex items-center bg-white p-4 rounded-xl shadow justify-between cursor-pointer hover:shadow-md transition-shadow"
                         >
                             <div className='flex'>
@@ -81,11 +92,12 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                     ))}
                 </div>
 
-                <ClientDetailsModal
-                    clientId={selectedClientId}
-                    onClose={closeModal}
-                    isOpen={isModalOpen}
-                />
+                {isModalOpen && selectedClient && (
+                    <ClientDetailsModal
+                        client={selectedClient}
+                        onClose={closeModal} />
+                )
+                }
             </AppLayout>
         </>
     );

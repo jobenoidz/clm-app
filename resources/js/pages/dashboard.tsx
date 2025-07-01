@@ -7,7 +7,7 @@ export default function Dashboard() {
         <>
             <Head title="Dashboard" />
             <AppLayout>
-                <div className="p-6">
+                <div>
                     <h2 className="text-xl font-semibold">Dashboard</h2>
                     {/* Your dashboard content */}
                 </div>

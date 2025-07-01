@@ -1,38 +1,34 @@
-// resources/js/Components/organisms/NavSide/NavSide.jsx
-import { Link, router } from '@inertiajs/react';
+import NavLink from './nav-item';
+
+const navItems = [
+    { name: 'Dashboard', route: 'dashboard' },
+    { name: 'Client Contacts', route: 'clients' },
+    { name: 'Leads Management', route: 'leads' },
+    { name: 'Sales Pipeline', route: null },
+    { name: 'Tasks & Activities', route: null },
+    { name: 'Email & Communication', route: null },
+    { name: 'Automation & Workflow', route: null },
+    { name: 'Reports & Analytics', route: null },
+    { name: 'Customer Support', route: null },
+    { name: 'Documents & Files', route: null },
+    { name: 'Admin & Settings', route: null },
+];
 
 export default function NavSide() {
-
     return (
-        <div className="w-64 text-black">
-            <div className="p-4">
-                <h1 className="text-2xl font-bold">Customer Relationship Management</h1>
-            </div>
-            <nav className="mt-6 flex flex-col items-center space-y-1">
-                <NavLink href="/dashboard" active={route().current('dashboard')}>
-                    Dashboard
-                </NavLink>
-                <NavLink href="/clients" active={route().current('clients')}>
-                    Client Contacts
-                </NavLink>
-                <NavLink href="/leads" active={route().current('leads')}>
-                    Leads Management
-                </NavLink>
-                <NavLink href="/settings" active={route().current('settings')}>
-                    Settings
-                </NavLink>
+        <div className="flex flex-col w-[18%] overflow-y-auto p-4 border-r-2 border-blue-800 fixed-size-text">
+            <h1 className="p-4 pb-2 font-bold !text-[24px] select-none">Customer Relationship Management</h1>
+            <nav className="mt-0 flex flex-col items-center space-y-1">
+                {navItems.map((navItem) => (
+                    <NavLink
+                        key={navItem.route}
+                        href={navItem.route ? '/' + navItem.route : ''}
+                        active={navItem.route ? route().current(navItem.route) : false}
+                    >
+                        {navItem.name}
+                    </NavLink>
+                ))}
             </nav>
         </div>
-    );
-}
-
-function NavLink({ href, active, children }) {
-    return (
-        <Link
-            href={href}
-            className={`flex w-[90%] rounded-3xl px-4 py-2  ${active ? 'bg-orange-400 text-white font-bold' : 'hover:bg-orange-300'}`}
-        >
-            {children}
-        </Link>
     );
 }

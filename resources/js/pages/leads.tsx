@@ -7,7 +7,7 @@ export default function LeadsPage() {
         <>
             <Head title="Leads Management" />
             <AppLayout>
-                <div className="p-6">
+                <div>
                     <h2 className="text-xl font-semibold">Leads Management</h2>
                     {/* Your dashboard content */}
                 </div>

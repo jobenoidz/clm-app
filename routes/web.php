@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\ClientsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+Route::redirect('/', 'login');
 
 Route::get('/', function () {
     return Inertia::render('auth/login');
@@ -11,9 +14,8 @@ Route::get('/dashboard', function () {
     return Inertia::render('dashboard');
 })->name('dashboard');
 
-Route::get('/clients', function () {
-    return Inertia::render('clients');
-})->name('clients');
+Route::get('/clients', [ClientsController::class, 'fetchClients'])->name('clients');
+Route::get('/client/{id}', [ClientsController::class, 'getClientDetails']);
 
 Route::get('/leads', function () {
     return Inertia::render('leads');
@@ -26,5 +28,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 });
 
-require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

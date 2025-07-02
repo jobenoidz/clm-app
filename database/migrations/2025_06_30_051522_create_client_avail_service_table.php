@@ -11,7 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('client_avail_service', function (Blueprint $table) {
-            $table->id('contract_id');
+            $table->id();
+            $table->string('sq_num');
             $table->foreignId('client_id')->constrained('client');
             $table->foreignId('group_id')->constrained('service');
             $table->foreignId('service_id')->constrained('service');

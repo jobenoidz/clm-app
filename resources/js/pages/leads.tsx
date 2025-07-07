@@ -3,31 +3,30 @@ import AppLayout from '../layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import { Building, ChevronRight, Contact, User } from 'lucide-react';
 import LeadFilterMenu from '@/components/leads-filter';
+import LeadDetailsModal from '@/components/lead-details';
 
 export default function LeadsPage({ leads }) {
     const [selectedLead, setSelectedLead] = useState(null);
-    const [leadStatus, setLeadStatus] = useState<string | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // const openModal = async (id: number, status: string) => {
-    //     try {
-    //         const response = await fetch(`/client/${id}`)
-    //         const data = await response.json()
-    //         // returns client, availed, and status
+    const openModal = async (id: number) => {
+        try {
+            const response = await fetch(`/lead/${id}`)
+            const data = await response.json()
+            // returns client, availed, and status
 
-    //         setSelectedLead(data);
-    //         setLeadStatus(status);
-    //         setIsModalOpen(true);
-    //     } catch (e) {
-    //         console.error("Error testFetch", e);
-    //     }
-    // };
+            setSelectedLead(data.lead);
+            setIsModalOpen(true);
+        } catch (e) {
+            console.error("Error testFetch", e);
+        }
+    };
 
-    // const closeModal = () => {
-    //     setSelectedLead(null);
-    //     setLeadStatus(null);
-    //     setIsModalOpen(false);
-    // }
+    const closeModal = () => {
+        setSelectedLead(null);
+        setIsModalOpen(false);
+    }
+
     return (
         <>
             <Head title="Leads Management" />
@@ -40,7 +39,7 @@ export default function LeadsPage({ leads }) {
                         {leads.map((lead) => (
                             <div
                                 key={lead.id}
-                                // onClick={() => openModal(lead.id, lead.status)}
+                                onClick={() => openModal(lead.id)}
                                 className="flex items-center bg-white hover:bg-orange-50 p-4 rounded-xl shadow justify-between hover:shadow-lg transition-all"
                             >
                                 <div className='flex w-[60%] grow-4'>
@@ -79,13 +78,12 @@ export default function LeadsPage({ leads }) {
                         ))}
                     </div>
 
-                    {/* {isModalOpen && selectedClient && (
-                        <ClientDetailsModal
-                            clientDetails={selectedClient}
-                            status={clientStatus}
+                    {isModalOpen && selectedLead && (
+                        <LeadDetailsModal
+                            leadDetails={selectedLead}
                             onClose={closeModal} />
                     )
-                    } */}
+                    }
                 </div>
             </AppLayout>
         </>

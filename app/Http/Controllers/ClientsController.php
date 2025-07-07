@@ -10,31 +10,47 @@ use Log;
 class ClientsController extends Controller
 {
     //
-    public function fetchClients()
+    public function fetchClients($status)
     {
         $clients = DB::table('company as c')
             ->join('contact as p', 'c.contact_id', '=', 'p.id')
-            ->leftJoin('client_avail_service as a', function ($join) {
-                $join->on('c.id', '=', 'a.client_id')
-                    ->whereRaw('a.availment_status = (
-                    SELECT a2.availment_status 
-                    FROM client_avail_service a2 
-                    WHERE a2.client_id = a.client_id
-                    ORDER BY FIELD(a2.availment_status, "For Renewal", "New", "Ongoing")
-                    LIMIT 1
-                )');
-            })
+            ->leftJoinSub(
+                DB::table('client_avail_service')
+                    ->select('client_id')
+                    ->selectRaw('
+                            SUBSTRING_INDEX(
+                                GROUP_CONCAT(
+                                    availment_status 
+                                    ORDER BY FIELD(availment_status, "For Renewal", "Ongoing", "New")
+                                    SEPARATOR ","
+                                ), 
+                                ",", 
+                                1
+                            ) as top_status
+                        ')
+                    ->groupBy('client_id'),
+                'a',
+                'c.id',
+                '=',
+                'a.client_id'
+            )
             ->select(
                 'c.id',
                 'c.company_name',
                 'p.full_name',
                 'p.work_email',
                 'p.work_phone',
-                'a.availment_status as status'
+                'a.top_status as status'
             )
             ->where('c.type', 'CLIENT')
+            ->when($status != 'all', function ($query) use ($status) {
+                $query->where('a.top_status', 'LIKE', $status);
+
+            })
             ->orderBy('c.company_name', 'asc')
             ->get();
+
+        // Log::info('CLIENT FETCH', ['clients' => $clients]);
 
         return Inertia::render('clients', [
             'clients' => $clients
@@ -51,7 +67,7 @@ class ClientsController extends Controller
                 'c.company_name',
                 'c.address',
                 'cl.date_added',
-                'cl.field',
+                'cl.category',
                 'cl.organization',
                 'cl.org_head',
                 'cl.school_head',
@@ -75,22 +91,39 @@ class ClientsController extends Controller
             ->get()
             ->toArray();
 
-        // $status = DB::table('client_avail_service as a')
-        //     ->select('a.availment_status')
-        //     ->where('a.client_id', $id)
-        //     ->orderByRaw("FIELD(availment_status, 'For Renewal', 'New', 'Ongoing')")
-        //     ->first();
-
-        Log::info('ID', ['id' => $id]);
-        Log::info('CLIENT', ['client' => $client]);
-        Log::info('AVAILED', ['availed' => $availed]);
-        // Log::info('STATUS', ['status' => $status->availment_status]);
+        // Log::info('ID', ['id' => $id]);
+        // Log::info('CLIENT', ['client' => $client]);
+        // Log::info('AVAILED', ['availed' => $availed]);
         return response()->json(
             [
                 'client' => $client,
                 'availed' => $availed,
-                // 'status' => $status->availment_status
             ]
         );
+    }
+
+    public function viewClientGroup($clientId, $groupId)
+    {
+        $groupServices = DB::table('client_avail_service as avail')
+            ->join('service as s', 's.id', '=', 'avail.service_id')
+            ->join('client as cl', 'cl.id', '=', 'avail.client_id')
+            ->select([
+                's.id',
+                'avail.sq_num',
+                's.service_name',
+                'avail.agreement_status as status',
+                'avail.contract_type',
+                DB::raw("DATE_FORMAT(avail.date_signed, '%b.  %e, %Y') as date_signed")
+            ])
+            ->where('avail.group_id', $groupId)
+            ->where('avail.client_id', $clientId)
+            ->get()
+            ->toArray();
+
+        Log::info('Group Services', ['groupServices' => $groupServices]);
+
+        return response()->json([
+            'groupServices' => $groupServices
+        ]);
     }
 }

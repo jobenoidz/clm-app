@@ -14,13 +14,13 @@ return new class extends Migration {
             $table->id();
             $table->string('sq_num');
             $table->foreignId('client_id')->constrained('client');
-            $table->foreignId('group_id')->constrained('service');
+            $table->foreignId('group_id')->constrained('product_group');
             $table->foreignId('service_id')->constrained('service');
             $table->date('proposal_date')->nullable();
             $table->year('project_year')->nullable();
             $table->string('contract_duration', 255)->nullable();
             $table->string('agreement_status', 255);
-            $table->enum('is_open_agreement', ['YES', 'NO'])->default('NO');
+            $table->enum('contract_type', ['Initial', 'Auto Renewal', 'For Rebid', 'Default'])->default('Default');
             $table->date('date_signed');
             $table->string('project_status', 255)->nullable();
             $table->integer('license_count')->nullable();

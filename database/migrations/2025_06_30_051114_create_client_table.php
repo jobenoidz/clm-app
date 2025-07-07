@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->text('org_head')->nullable();
             $table->text('school_head')->nullable();
             $table->string('head_email', 255)->nullable();
-            $table->string('field', 255)->nullable();
+            $table->string('category', 255)->nullable();
             $table->timestamps();
         });
     }

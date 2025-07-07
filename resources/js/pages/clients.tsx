@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import AppLayout from '../layouts/app-layout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Building, ChevronRight, Contact, MapPin, User, X } from 'lucide-react';
 import ClientDetailsModal from '../components/client-details';
+import { Button } from '@/components/ui/button';
+import { link } from 'fs';
+import ClientFilterMenu from '@/components/client-filter';
 
 interface Client {
     id: number;
@@ -47,13 +50,14 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
             <Head title="Client Contacts" />
             <AppLayout>
                 <h2 className="text-xl font-semibold">Client Contacts</h2>
+                <ClientFilterMenu />
                 {/* Cards  */}
                 <div className="w-[50%] min-w-[50lvw] grid grid-cols-1 gap-4 mt-4">
-                    {clients.map((client, index) => (
+                    {clients.map((client) => (
                         <div
                             key={client.id}
                             onClick={() => openModal(client.id, client.status)}
-                            className="flex items-center bg-white p-4 rounded-xl shadow justify-between cursor-pointer hover:shadow-md transition-shadow"
+                            className="flex items-center bg-white hover:bg-sky-50 p-4 rounded-xl shadow justify-between hover:shadow-lg transition-all"
                         >
                             <div className='flex w-[60%] grow-4'>
                                 {/* Logo */}
@@ -74,16 +78,19 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                                     {/* Email and Phone */}
                                     <div className='flex items-center space-x-2 text-gray-700'>
                                         <Contact size={16} />
-                                        <span className='whitespace-pre text-[13px]'>
-                                            {client.work_email}{client.work_phone ? ` • ${client.work_phone}` : ''}
-                                        </span>
+                                        <div className='whitespace-pre text-[13px]'>
+                                            <a className='cursor-pointer hover:text-blue-600 hover:underline hover:underline-offset-2' href={`mailto:${client.work_email}`}>
+                                                {client.work_email}
+                                            </a>
+                                            {client.work_phone ? ` • ${client.work_phone}` : ''}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div className='grow-2 w-[25%]'>
                                 {client.status}
                             </div>
-                            <ChevronRight className='text-gray-500 hover:text-gray-700' />
+                            <ChevronRight className='text-gray-500 hover:text-gray-700 cursor-pointer' />
                         </div>
                     ))}
                 </div>
@@ -92,12 +99,10 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                     <ClientDetailsModal
                         clientDetails={selectedClient}
                         status={clientStatus}
-                        // availed={selectedAvailed}
-                        // status={selectedStatus}
                         onClose={closeModal} />
                 )
                 }
-            </AppLayout>
+            </AppLayout >
         </>
     );
 }

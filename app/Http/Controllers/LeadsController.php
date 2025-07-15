@@ -88,4 +88,48 @@ class LeadsController extends Controller
             ]
         );
     }
+
+    public function addLead(Request $request)
+    {
+        DB::beginTransaction();
+
+        try {
+            $contactId = DB::table('contact')->insertGetId([
+                'full_name' => $request->input('contact_person'),
+                'position' => $request->input('position'),
+                'work_email' => $request->input('work_email'),
+                'work_phone' => $request->input('work_phone'),
+            ]);
+
+            $companyId = DB::table('company')->insertGetId([
+                'company_name' => $request->input('company_name'),
+                'address' => $request->input('address'),
+                'contact_id' => $contactId,
+                'type' => 'LEAD',
+            ]);
+
+            DB::table('lead')->insert([
+                'company_id' => $companyId,
+                'key_decision_maker' => $request->input('key_decision_maker'),
+                'domain' => $request->input('domain'),
+                'lead_source' => $request->input('lead_source'),
+                'rt_date' => $request->input('rt_date'),
+                'timeline' => $request->input('timeline'),
+                'challenges' => $request->input('challenges'),
+                'needs_or_requirements' => $request->input('needs'),
+                'remarks' => $request->input('remarks'),
+                'notes' => $request->input('notes'),
+                'date_added' => now(),
+                'status' => 1
+            ]);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Lead added successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error adding lead', ['message' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to add lead.');
+        }
+    }
 }

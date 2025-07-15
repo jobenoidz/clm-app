@@ -18,9 +18,11 @@ Route::get('/dashboard', function () {
 Route::get('/clients-{status}', [ClientsController::class, 'fetchClients'])->name('clients');
 Route::get('/client/{id}', [ClientsController::class, 'getClientDetails']);
 Route::get('/client/{clientId}/{groupId}', [ClientsController::class, 'viewClientGroup']);
+Route::post('/add-client', [ClientsController::class, 'addClient']);
 
 Route::get('/leads-{status}', [LeadsController::class, 'fetchLeads'])->name('leads');
 Route::get('/lead/{id}', [LeadsController::class, 'getLeadDetails']);
+Route::post('/add-lead', [LeadsController::class, 'addLead']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('dashboard', function () {

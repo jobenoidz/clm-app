@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import AppLayout from '../layouts/app-layout';
 import { Head, Link } from '@inertiajs/react';
-import { Building, ChevronRight, Contact, MapPin, User, X } from 'lucide-react';
+import { Building, ChevronRight, Contact, Download, ListFilter, Plus, User } from 'lucide-react';
 import ClientDetailsModal from '../components/client-details';
 import { Button } from '@/components/ui/button';
-import { link } from 'fs';
 import ClientFilterMenu from '@/components/client-filter';
+import { secureHeapUsed } from 'crypto';
+import { Input } from '@/components/ui/input';
+import AddClientModal from '@/components/client-add';
 
 interface Client {
     id: number;
@@ -45,14 +47,40 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
         setIsModalOpen(false);
     }
 
+    const [isAddClientOpen, setIsAddClientOpen] = useState(false);
+
+    const openAddClient = () => {
+        setIsAddClientOpen(true);
+    }
+
+    const closeAddClient = () => {
+        setIsAddClientOpen(false);
+    }
     return (
         <>
             <Head title="Client Contacts" />
             <AppLayout>
                 <h2 className="text-xl font-semibold">Client Contacts</h2>
+                <div className='flex justify-between mb-4'>
+                    <div className='flex border-2 items-center rounded-xl px-3 gap-3'>
+                        <ListFilter />
+                        <input placeholder='Type to filter...' className='focus:outline-none' />
+                    </div>
+                    {/* Add Client */}
+                    <div className='flex gap-4'>
+                        <Button className='hover:cursor-pointer' onClick={() => openAddClient()}>
+                            <Plus />
+                            Add New Client
+                        </Button>
+                        <Button variant={'outline'} className='text-primary border-primary'>
+                            <Download />
+                            Export List
+                        </Button>
+                    </div>
+                </div>
                 <ClientFilterMenu />
                 {/* Cards  */}
-                <div className="w-[50%] min-w-[50lvw] grid grid-cols-1 gap-4 mt-4">
+                <div className="grid grid-cols-1 gap-4 mt-4">
                     {clients.map((client) => (
                         <div
                             key={client.id}
@@ -100,6 +128,13 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                         clientDetails={selectedClient}
                         status={clientStatus}
                         onClose={closeModal} />
+                )
+                }
+
+                {isAddClientOpen && (
+                    <AddClientModal
+                        onAddClientClose={closeAddClient}
+                    />
                 )
                 }
             </AppLayout >

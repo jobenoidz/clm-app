@@ -3,6 +3,15 @@ import { router } from '@inertiajs/react'
 import { PlusCircle } from 'lucide-react'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 
 export default function AddLeadModal({ onAddLeadClose }) {
     const [values, setValues] = useState({
@@ -68,6 +77,28 @@ export default function AddLeadModal({ onAddLeadClose }) {
                                 className="w-full border px-2 py-1"
                                 placeholder="123 Main St"
                             />
+                        </div>
+                        <div className='flex items-center'>
+                            <label htmlFor="work_phone" className="text-sm font-bold w-50">Category</label>
+                            <Select>
+                                <SelectTrigger className='w-full'>
+                                    <SelectValue placeholder="Theme" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Educational Institution</SelectLabel>
+                                        <SelectItem value="light">Light</SelectItem>
+                                        <SelectItem value="dark">Dark</SelectItem>
+                                        <SelectItem value="system">System</SelectItem>
+                                    </SelectGroup>
+                                    <SelectGroup>
+                                        <SelectLabel>Organization</SelectLabel>
+                                        <SelectItem value="light">Light</SelectItem>
+                                        <SelectItem value="dark">Dark</SelectItem>
+                                        <SelectItem value="system">System</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
                 </div>
@@ -141,6 +172,7 @@ export default function AddLeadModal({ onAddLeadClose }) {
                                 placeholder="+1 555-1234"
                             />
                         </div>
+
                     </div>
 
                     {/* right col */}

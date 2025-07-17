@@ -23,12 +23,15 @@ interface AvailedItem {
 //     status: Object
 // }
 
-export default function GroupModalDetails({ clientName, group, groupName, onGroupClose }) {
-    if (!group) return null
-    const [expandedRow, setExpandedRow] = useState<number | null>(null);
+export default function ServicesModalDetails({ clientName, services, onServicesClose }) {
+    if (!services) return null
+    const [expandedRows, setExpandedRows] = useState<number[]>([]);
+
 
     const toggleRow = (id: number) => {
-        setExpandedRow(expandedRow === id ? null : id);
+        setExpandedRows(prev =>
+            prev.includes(id) ? prev.filter(rowId => rowId !== id) : [...prev, id]
+        );
     };
 
 
@@ -37,15 +40,15 @@ export default function GroupModalDetails({ clientName, group, groupName, onGrou
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
                 <div
                     className="absolute inset-0 z-1 bg-black/20"
-                    onClick={onGroupClose}
+                    onClick={onServicesClose}
                 />
                 <div className="flex flex-col bg-white rounded-2xl w-[60vw] min-h-[50vh] max-h-[100vh] overflow-auto z-2">
                     {/* Group Modal Header */}
                     <div className="p-4 justify-between flex items-center">
-                        <span className='text-xl font-bold'>{clientName} - {groupName}</span>
+                        <span className='text-xl font-bold'>{clientName}</span>
                         <button
                             className="text-gray-500 hover:text-gray-700"
-                            onClick={onGroupClose}
+                            onClick={onServicesClose}
                         >
                             <X size={24} className='cursor-pointer' />
                         </button>
@@ -56,6 +59,7 @@ export default function GroupModalDetails({ clientName, group, groupName, onGrou
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>SQ #</TableHead>
+                                    <TableHead>Product Group</TableHead>
                                     <TableHead>Service Availed</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Contract Type</TableHead>
@@ -64,25 +68,28 @@ export default function GroupModalDetails({ clientName, group, groupName, onGrou
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {group.map((groupItem) => (
+                                {services.map((groupItem) => (
                                     <>
                                         <TableRow
                                             key={groupItem.id}
-                                            className={`hover:bg-sky-200 cursor-pointer relative ${expandedRow === groupItem.id ? 'bg-sky-100 shadow-inner' : ''}`}
+                                            className={`hover:bg-sky-200 cursor-pointer relative ${expandedRows.includes(groupItem.id) ? 'bg-sky-100 shadow-inner' : ''
+                                                }`}
+
                                             onClick={() => toggleRow(groupItem.id)}
                                         >
                                             <TableCell className="italic">{groupItem.sq_num}</TableCell>
+                                            <TableCell className="font-bold">{groupItem.group_name}</TableCell>
                                             <TableCell className="font-bold">{groupItem.service_name}</TableCell>
                                             <TableCell>{groupItem.status}</TableCell>
                                             <TableCell>{groupItem.contract_type}</TableCell>
                                             <TableCell>{groupItem.date_signed}</TableCell>
                                             <TableCell>{groupItem.date_signed}</TableCell>
                                             <TableCell>
-                                                {expandedRow === groupItem.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                                                {expandedRows.includes(groupItem.id) ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                                             </TableCell>
                                         </TableRow>
 
-                                        {expandedRow === groupItem.id && (
+                                        {expandedRows.includes(groupItem.id) && (
                                             <TableRow className="bg-blue-50">
                                                 <TableCell colSpan={7} className="p-0 border-t-2 border-sky-200">
                                                     <div className="p-4 pl-8 relative">

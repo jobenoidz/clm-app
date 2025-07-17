@@ -1,6 +1,5 @@
 import { Circle, MapPin, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import GroupModalDetails from './client-group-services';
 
 interface AvailedItem {
     group_id: number,

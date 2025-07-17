@@ -1,7 +1,7 @@
 import { Circle, MapPin, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import GroupModalDetails from './client-group-services';
+import ServicesModalDetails from './client-services';
 
 interface AvailedItem {
     group_id: number,
@@ -18,18 +18,16 @@ export default function ClientDetailsModal({ clientDetails, status, onClose }) {
     const { client } = clientDetails;
     if (!client) return null
 
-    const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
-    const [selectedGroup, setSelectedGroup] = useState<any>(null);
-    const [groupName, setGroupName] = useState<string | null>(null);
+    const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
+    const [clientServices, setClientServices] = useState<any>(null);
 
-    const openGroupModal = async (clientId: number) => {
+    const openServicesModal = async (clientId: number) => {
         try {
             const response = await fetch(`client/${clientId}/services`);
             const data = await response.json();
 
-            setSelectedGroup(data.clientServices);
-            setGroupName(groupName);
-            setIsGroupModalOpen(true);
+            setClientServices(data.clientServices);
+            setIsServicesModalOpen(true);
 
         } catch (e) {
 
@@ -38,10 +36,9 @@ export default function ClientDetailsModal({ clientDetails, status, onClose }) {
 
     }
 
-    const closeGroupModal = () => {
-        setSelectedGroup(null);
-        setGroupName(null);
-        setIsGroupModalOpen(false);
+    const closeServicesModal = () => {
+        setClientServices(null);
+        setIsServicesModalOpen(false);
     }
 
     return (
@@ -126,38 +123,22 @@ export default function ClientDetailsModal({ clientDetails, status, onClose }) {
                             </div>
                             <Button
                                 className="bg-[#ff802b] text-xl rounded-full hover:bg-[#ff5e00] w-[100%]"
-                                onClick={() => openGroupModal(client.id)}
+                                onClick={() => openServicesModal(client.id)}
                             >
                                 Availed Services
                             </Button>
                         </div>
                     </div>
-
-                    {/* Modal Footer */}
-
-                    {/* <div className="border-t p-5 flex grow justify-between space-x-3 sticky bottom-0 bg-[#e7f3ff] z-2 overflow-auto">
-                        <div className="space-y-2">
-
-                        </div>
-                        <div className='border-primary border-1' />
-
-                        <div className="flex w-[45%]">
-
-                        </div>
-
-                    </div> */}
-
                 </div>
             </div>
 
             {
-                isGroupModalOpen && (
-                    <GroupModalDetails
+                isServicesModalOpen && (
+                    <ServicesModalDetails
                         clientName={client.company_name}
-                        group={selectedGroup}
-                        groupName={groupName}
-                        onGroupClose={closeGroupModal}
-                    ></GroupModalDetails>
+                        services={clientServices}
+                        onServicesClose={closeServicesModal}
+                    ></ServicesModalDetails>
                 )}
         </>
     );

@@ -6,6 +6,7 @@ import LeadFilterMenu from '@/components/leads-filter';
 import LeadDetailsModal from '@/components/lead-details';
 import AddLeadModal from '@/components/lead-add';
 import { Button } from '@/components/ui/button';
+import AddClientModal from '@/components/client-add';
 
 export default function LeadsPage({ leads }) {
     const [selectedLead, setSelectedLead] = useState(null);
@@ -30,6 +31,7 @@ export default function LeadsPage({ leads }) {
     }
 
     const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+    const [isLeadOptionsOpen, setIsLeadOptionsOpen] = useState(false);
 
     const openAddLead = () => {
         setIsAddLeadOpen(true)
@@ -38,6 +40,16 @@ export default function LeadsPage({ leads }) {
     const closeAddLead = () => {
         setIsAddLeadOpen(false)
     }
+
+    const openLeadOptions = () => {
+        setIsLeadOptionsOpen(true)
+    }
+
+    const closeLeadOptions = () => {
+        setIsLeadOptionsOpen(false)
+    }
+
+
 
     return (
         <>
@@ -68,7 +80,7 @@ export default function LeadsPage({ leads }) {
                             <div
                                 key={lead.id}
                                 onClick={() => openModal(lead.id)}
-                                className="relative flex items-center bg-white hover:bg-orange-50 p-4 rounded-xl shadow justify-between hover:shadow-lg transition-all"
+                                className="z-3 relative flex items-center bg-white hover:bg-orange-50 p-4 rounded-xl shadow justify-between hover:shadow-lg transition-all"
                             >
                                 <div className='flex w-[60%] grow-4'>
                                     {/* Logo */}
@@ -102,10 +114,23 @@ export default function LeadsPage({ leads }) {
                                     {lead.status}
                                 </div>
                                 <ChevronRight className='text-gray-500 hover:text-gray-700 cursor-pointer' />
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        openLeadOptions();
+                                    }}
+                                    className="absolute right-4 bottom-2 border-2 rounded-xl hover:bg-amber-200 text-gray-500 hover:text-gray-700"
+                                >
+                                    <EllipsisIcon />
+                                </button>
 
-                                <EllipsisIcon className='absolute right-4 bottom-2 text-gray-500 hover:text-gray-700 cursor-pointer border-2 rounded-xl hover:bg-amber-200' />
                             </div>
                         ))}
+                        {isLeadOptionsOpen && (
+                            <div onClick={() => closeLeadOptions()} className='absolute top-0 p-15 bg-white text-4xl'>
+                                test
+                            </div>
+                        )}
                     </div>
 
                     {isModalOpen && selectedLead && (
@@ -120,6 +145,8 @@ export default function LeadsPage({ leads }) {
                             onAddLeadClose={closeAddLead} />
                     )
                     }
+
+
                 </div>
             </AppLayout>
         </>

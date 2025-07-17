@@ -99,6 +99,9 @@ class LeadsController extends Controller
                 'position' => $request->input('position'),
                 'work_email' => $request->input('work_email'),
                 'work_phone' => $request->input('work_phone'),
+                'created_at' => now(),
+                'updated_at' => now(),
+
             ]);
 
             $companyId = DB::table('company')->insertGetId([
@@ -106,6 +109,9 @@ class LeadsController extends Controller
                 'address' => $request->input('address'),
                 'contact_id' => $contactId,
                 'type' => 'LEAD',
+                'created_at' => now(),
+                'updated_at' => now(),
+
             ]);
 
             DB::table('lead')->insert([
@@ -120,7 +126,9 @@ class LeadsController extends Controller
                 'remarks' => $request->input('remarks'),
                 'notes' => $request->input('notes'),
                 'date_added' => now(),
-                'status' => 1
+                'status' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             DB::commit();

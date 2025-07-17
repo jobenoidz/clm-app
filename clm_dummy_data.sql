@@ -83,7 +83,7 @@ INSERT INTO lead_status (status_name, description) VALUES
 ('Lost', 'No response at all');
 
 -- Insert lead info (keeping original column names)
-INSERT INTO lead (
+INSERT INTO `lead` (
     company_id, 
     date_added, 
     rt_date, 
@@ -94,7 +94,7 @@ INSERT INTO lead (
     challenges, 
     remarks, 
     needs_or_requirements, 
-    website, 
+    domain, 
     timeline, 
     lead_source, 
     initial_contact_date, 

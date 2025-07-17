@@ -80,50 +80,39 @@ class ClientsController extends Controller
             ->where('c.id', $id)
             ->first();
 
-        $availed = DB::table('client_avail_service as a')
-            ->join('product_group as g', 'a.group_id', '=', 'g.id', 'inner')
-            ->select(
-                'a.group_id',
-                'g.group_name'
-            )
-            ->distinct()
-            ->where('client_id', 1)
-            ->get()
-            ->toArray();
-
         // Log::info('ID', ['id' => $id]);
         // Log::info('CLIENT', ['client' => $client]);
         // Log::info('AVAILED', ['availed' => $availed]);
         return response()->json(
             [
-                'client' => $client,
-                'availed' => $availed,
+                'client' => $client
             ]
         );
     }
 
-    public function viewClientGroup($clientId, $groupId)
+    public function viewClientServices($clientId)
     {
-        $groupServices = DB::table('client_avail_service as avail')
+        $clientServices = DB::table('client_avail_service as avail')
+            ->join('product_group as g', 'g.id', '=', 'avail.group_id')
             ->join('service as s', 's.id', '=', 'avail.service_id')
             ->join('client as cl', 'cl.id', '=', 'avail.client_id')
             ->select([
                 's.id',
                 'avail.sq_num',
+                'g.group_name',
                 's.service_name',
                 'avail.agreement_status as status',
                 'avail.contract_type',
                 DB::raw("DATE_FORMAT(avail.date_signed, '%b.  %e, %Y') as date_signed")
             ])
-            ->where('avail.group_id', $groupId)
             ->where('avail.client_id', $clientId)
             ->get()
             ->toArray();
 
-        Log::info('Group Services', ['groupServices' => $groupServices]);
+        Log::info('Group Services', ['clientServices' => $clientServices]);
 
         return response()->json([
-            'groupServices' => $groupServices
+            'clientServices' => $clientServices
         ]);
     }
 

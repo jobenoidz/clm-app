@@ -17,7 +17,7 @@ Route::get('/dashboard', function () {
 
 Route::get('/clients-{status}', [ClientsController::class, 'fetchClients'])->name('clients');
 Route::get('/client/{id}', [ClientsController::class, 'getClientDetails']);
-Route::get('/client/{clientId}/{groupId}', [ClientsController::class, 'viewClientGroup']);
+Route::get('/client/{clientId}/services', [ClientsController::class, 'viewClientServices']);
 Route::post('/add-client', [ClientsController::class, 'addClient']);
 
 Route::get('/leads-{status}', [LeadsController::class, 'fetchLeads'])->name('leads');

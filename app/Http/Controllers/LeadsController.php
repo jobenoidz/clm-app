@@ -55,6 +55,7 @@ class LeadsController extends Controller
             ->join('lead as l', 'l.company_id', '=', 'c.id', 'inner')
             ->join('lead_status as s', 'l.status', '=', 's.id')
             ->join('contact as p', 'p.id', '=', 'c.contact_id', 'inner')
+            ->leftJoin('users as u', 'l.assigned_to', '=', 'u.id')
             ->select(
                 'c.id',
                 'c.company_name',
@@ -72,6 +73,8 @@ class LeadsController extends Controller
                 'p.work_email',
                 'p.work_phone',
                 'l.assigned_to',
+                'u.name as assigned_user_name',
+                'u.email as assigned_user_email',
                 'l.timeline',
                 'l.challenges',
                 'l.needs_or_requirements as needs',

@@ -128,7 +128,8 @@ export default function LeadsPage({ leads }) {
                         ))}
                         {isLeadOptionsOpen && (
                             <div onClick={() => closeLeadOptions()} className='absolute top-0 p-15 bg-white text-4xl'>
-                                test
+                                - Update Status <br />
+                                - Assign to
                             </div>
                         )}
                     </div>

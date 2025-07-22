@@ -17,7 +17,6 @@ export default function LeadFilterMenu() {
 
     return (
         <>
-
             <nav className="flex border-orange-400 border-2 rounded-full p-2 justify-between text-center items-center gap-2">
                 {leadFilters.map((item) => {
                     const href = `/leads-${item.option}`;
@@ -39,7 +38,7 @@ export default function LeadFilterMenu() {
 
 
             </nav>
-            <nav>
+            {/* <nav>
                 <Link
                     key={'assigned'}
                     href={`/leads-new-assigned`}
@@ -60,7 +59,7 @@ export default function LeadFilterMenu() {
                 >
                     Unassigned
                 </Link>
-            </nav>
+            </nav> */}
         </>
     );
 }

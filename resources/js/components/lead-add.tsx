@@ -52,7 +52,7 @@ export default function AddLeadModal({ onAddLeadClose }) {
             />
             <form onSubmit={handleSubmit} className="relative bg-white rounded-2xl w-[70vw] max-h-[90vh] overflow-auto z-10 p-4">
                 <h2 className="text-xl mb-4 text-center">Add New Lead</h2>
-                <div className='flex items-center justify-center bg-orange-100'>
+                <div className='flex items-center justify-center bg-orange-200 p-2 m-4 mb-2 rounded-xl'>
                     <div className='bg-gray-300 rounded-full p-6 mx-3'>
                         <PlusCircle />
                     </div>
@@ -82,20 +82,19 @@ export default function AddLeadModal({ onAddLeadClose }) {
                             <label htmlFor="work_phone" className="text-sm font-bold w-50">Category</label>
                             <Select>
                                 <SelectTrigger className='w-full'>
-                                    <SelectValue placeholder="Theme" />
+                                    <SelectValue placeholder="Category" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Educational Institution</SelectLabel>
-                                        <SelectItem value="light">Light</SelectItem>
-                                        <SelectItem value="dark">Dark</SelectItem>
-                                        <SelectItem value="system">System</SelectItem>
+                                        <SelectItem value="HE">Higher Education</SelectItem>
+                                        <SelectItem value="K12">K-12 Education</SelectItem>
                                     </SelectGroup>
                                     <SelectGroup>
                                         <SelectLabel>Organization</SelectLabel>
-                                        <SelectItem value="light">Light</SelectItem>
-                                        <SelectItem value="dark">Dark</SelectItem>
-                                        <SelectItem value="system">System</SelectItem>
+                                        <SelectItem value="Gov">Government (Bidding)</SelectItem>
+                                        <SelectItem value="GovBid">Government</SelectItem>
+                                        <SelectItem value="Priv">Private</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -104,7 +103,7 @@ export default function AddLeadModal({ onAddLeadClose }) {
                 </div>
                 <div className='flex'>
                     {/* left col */}
-                    <div className='w-1/2 bg-orange-50 p-4 space-y-4'>
+                    <div className='w-1/2 bg-orange-200 p-4 space-y-4 ml-4 mr-1 rounded-xl'>
                         {/* Decision & Domain */}
                         <div className='flex items-center'>
                             <label htmlFor="key_decision_maker" className="text-sm font-bold w-50">Key Decision Maker</label>
@@ -172,11 +171,9 @@ export default function AddLeadModal({ onAddLeadClose }) {
                                 placeholder="+1 555-1234"
                             />
                         </div>
-
                     </div>
-
                     {/* right col */}
-                    <div className='w-1/2 bg-green-50 p-4'>
+                    <div className='w-1/2 bg-orange-200 p-4 ml-1 mr-4 rounded-xl'>
                         <div className='h-[60vh] overflow-y-auto space-y-4'>
                             {/* Lead Details */}
                             <div>
@@ -250,7 +247,7 @@ export default function AddLeadModal({ onAddLeadClose }) {
                         </div>
                     </div>
                 </div>
-                <div className="absolute bottom-0 z-1 justify-end space-x-2 bg-pink-50 items-center py-2 pr-4">
+                <div className="absolute bottom-0 left-0 z-1 w-full space-x-2 bg-orange-300 items-center flex justify-center p-2">
                     <Button
                         variant={'secondary'}
                         type="button"

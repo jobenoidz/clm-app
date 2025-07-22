@@ -23,6 +23,9 @@ Route::post('/add-client', [ClientsController::class, 'addClient']);
 Route::get('/leads-{status}', [LeadsController::class, 'fetchLeads'])->name('leads');
 Route::get('/lead/{id}', [LeadsController::class, 'getLeadDetails']);
 Route::post('/add-lead', [LeadsController::class, 'addLead']);
+Route::post('/lead/{id}/update-status', [LeadsController::class, 'updateStatus']);
+Route::post('/lead/{id}/assign-user', [LeadsController::class, 'assignUser']);
+Route::get('/sales-reps', [LeadsController::class, 'getSalesReps']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('dashboard', function () {

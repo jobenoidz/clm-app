@@ -117,9 +117,18 @@ export default function LeadDetailsModal({ leadDetails, onClose }) {
                                 <p className="font-medium w-32">Work Phone:</p>
                                 <p>{lead.work_phone || 'Not specified'}</p>
                             </div>
-                            <div className="flex gap-4 mt-10">
+                            <div className="flex flex-col gap-4 mt-10">
                                 <p className="font-medium">Person In Charge:</p>
-                                <p>{lead.assigned_to || 'Not specified'}</p>
+                                {lead.assigned_to ? (
+                                    <div className="w-full h-24 flex flex-col items-center justify-center bg-white border-2 border-solid border-gray-400 rounded-lg mt-2 mb-4">
+                                        <span className="text-lg font-semibold">{lead.assigned_user_name}</span>
+                                        <span className="text-sm text-gray-500">{lead.assigned_user_email}</span>
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-24 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg mt-2 mb-4">
+                                        <span className="text-lg text-gray-400">No Assigned Manager</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

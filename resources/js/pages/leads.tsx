@@ -6,18 +6,36 @@ import LeadFilterMenu from '@/components/leads-filter';
 import LeadDetailsModal from '@/components/lead-details';
 import AddLeadModal from '@/components/lead-add';
 import { Button } from '@/components/ui/button';
-import AddClientModal from '@/components/client-add';
+import LeadUpdate from '@/components/lead-update';
 
-export default function LeadsPage({ leads }) {
+export interface Lead {
+    id: number;
+    company_name: string;
+    full_name: string;
+    work_email: string;
+    work_phone?: string;
+    status: string;
+    assigned_user_name?: string;
+    assigned_to?: number;
+    assigned_user_email?: string;
+}
+
+interface LeadsPageProps {
+    leads: Lead[];
+}
+
+export default function LeadsPage({ leads }: LeadsPageProps) {
     const [selectedLead, setSelectedLead] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
+    const [isLeadOptionsOpen, setIsLeadOptionsOpen] = useState(false);
+    const [leadForOptions, setLeadForOptions] = useState<Lead | null>(null);
+    const [isLeadOptionsLoading, setIsLeadOptionsLoading] = useState(false);
 
     const openModal = async (id: number) => {
         try {
             const response = await fetch(`/lead/${id}`)
             const data = await response.json()
-            // returns client, availed, and status
-
             setSelectedLead(data.lead);
             setIsModalOpen(true);
         } catch (e) {
@@ -30,26 +48,27 @@ export default function LeadsPage({ leads }) {
         setIsModalOpen(false);
     }
 
-    const [isAddLeadOpen, setIsAddLeadOpen] = useState(false);
-    const [isLeadOptionsOpen, setIsLeadOptionsOpen] = useState(false);
+    const openAddLead = () => setIsAddLeadOpen(true);
+    const closeAddLead = () => setIsAddLeadOpen(false);
 
-    const openAddLead = () => {
-        setIsAddLeadOpen(true)
-    }
-
-    const closeAddLead = () => {
-        setIsAddLeadOpen(false)
-    }
-
-    const openLeadOptions = () => {
-        setIsLeadOptionsOpen(true)
-    }
+    const openLeadOptions = async (lead: Lead) => {
+        setIsLeadOptionsLoading(true);
+        try {
+            const response = await fetch(`/lead/${lead.id}`);
+            const data = await response.json();
+            setLeadForOptions(data.lead);
+            setIsLeadOptionsOpen(true);
+        } catch (e) {
+            console.error('Error fetching lead details for update modal', e);
+        } finally {
+            setIsLeadOptionsLoading(false);
+        }
+    };
 
     const closeLeadOptions = () => {
-        setIsLeadOptionsOpen(false)
-    }
-
-
+        setLeadForOptions(null);
+        setIsLeadOptionsOpen(false);
+    };
 
     return (
         <>
@@ -62,9 +81,8 @@ export default function LeadsPage({ leads }) {
                             <ListFilter className=' text-orange-600' />
                             <input placeholder='Type to filter...' className='focus:outline-none' />
                         </div>
-                        {/* Add Client */}
                         <div className='flex gap-4'>
-                            <Button className='hover:cursor-pointer bg-orange-500 hover:bg-orange-600' onClick={() => openAddLead()}>
+                            <Button className='hover:cursor-pointer bg-orange-500 hover:bg-orange-600' onClick={openAddLead}>
                                 <Plus />
                                 Add New Lead
                             </Button>
@@ -76,7 +94,7 @@ export default function LeadsPage({ leads }) {
                     </div>
                     <LeadFilterMenu />
                     <div className="min-w-[50vw] grid grid-cols-1 gap-4 mt-4">
-                        {leads.map((lead) => (
+                        {leads.map((lead: Lead) => (
                             <div
                                 key={lead.id}
                                 onClick={() => openModal(lead.id)}
@@ -115,38 +133,32 @@ export default function LeadsPage({ leads }) {
                                 </div>
                                 <ChevronRight className='text-gray-500 hover:text-gray-700 cursor-pointer' />
                                 <button
-                                    onClick={(e) => {
+                                    onClick={async (e) => {
                                         e.stopPropagation();
-                                        openLeadOptions();
+                                        await openLeadOptions(lead);
                                     }}
                                     className="absolute right-4 bottom-2 border-2 rounded-xl hover:bg-amber-200 text-gray-500 hover:text-gray-700"
                                 >
                                     <EllipsisIcon />
                                 </button>
-
                             </div>
                         ))}
-                        {isLeadOptionsOpen && (
-                            <div onClick={() => closeLeadOptions()} className='absolute top-0 p-15 bg-white text-4xl'>
-                                test
-                            </div>
+                        {isLeadOptionsOpen && leadForOptions && !isLeadOptionsLoading && (
+                            <LeadUpdate
+                                leadDetails={leadForOptions}
+                                onClose={closeLeadOptions}
+                            />
                         )}
                     </div>
-
                     {isModalOpen && selectedLead && (
                         <LeadDetailsModal
                             leadDetails={selectedLead}
                             onClose={closeModal} />
-                    )
-                    }
-
+                    )}
                     {isAddLeadOpen && (
                         <AddLeadModal
                             onAddLeadClose={closeAddLead} />
-                    )
-                    }
-
-
+                    )}
                 </div>
             </AppLayout>
         </>

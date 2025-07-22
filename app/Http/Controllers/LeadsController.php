@@ -33,6 +33,8 @@ class LeadsController extends Controller
                     return $query->where('s.status_name', 'LIKE', $status)
                         // ->whereNull('l.assigned_to')
                     ;
+                } else if ($status === 'rejected_or_lost') {
+                    return $query->whereIn('s.status_name', ['rejected', 'lost']);
                 } else {
                     return $query->where('s.status_name', 'LIKE', $status);
                 }

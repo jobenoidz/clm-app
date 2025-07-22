@@ -1,10 +1,4 @@
 import { Circle, MapPin, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-interface AvailedItem {
-    group_id: number,
-    group_name: string
-}
 
 // interface ClientDetailsData {
 //     client: Object,

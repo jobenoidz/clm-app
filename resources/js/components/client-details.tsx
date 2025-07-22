@@ -3,37 +3,44 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ServicesModalDetails from './client-services';
 
-interface AvailedItem {
-    group_id: number,
-    group_name: string
+interface ClientType {
+    id: number;
+    company_name: string;
+    address: string;
+    full_name: string;
+    position?: string;
+    work_email?: string;
+    work_phone?: string;
+    date_added: string;
+    category?: string;
+    organization?: string;
+    org_head?: string;
+    school_head?: string;
+    head_email?: string;
 }
 
-// interface ClientDetailsData {
-//     client: Object,
-//     availed: Array<Object>,
-//     status: Object
-// }
+interface ClientDetailsModalProps {
+    clientDetails: { client: ClientType };
+    status: string;
+    onClose: () => void;
+}
 
-export default function ClientDetailsModal({ clientDetails, status, onClose }) {
-    const { client } = clientDetails;
-    if (!client) return null
-
+export default function ClientDetailsModal({ clientDetails, status, onClose }: ClientDetailsModalProps) {
+    // Move hooks to top level
     const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
-    const [clientServices, setClientServices] = useState<any>(null);
+    const [clientServices, setClientServices] = useState<unknown>(null);
+    const { client } = clientDetails;
+    if (!client) return null;
 
     const openServicesModal = async (clientId: number) => {
         try {
             const response = await fetch(`client/${clientId}/services`);
             const data = await response.json();
-
             setClientServices(data.clientServices);
             setIsServicesModalOpen(true);
-
         } catch (e) {
-
             console.error("Error group service fetch", e);
         }
-
     }
 
     const closeServicesModal = () => {

@@ -156,4 +156,22 @@ class LeadsController extends Controller
         }
         return response()->json(['success' => false, 'message' => 'Invalid status'], 400);
     }
+
+    public function assignUser(Request $request, $id)
+    {
+        $userId = $request->input('user_id');
+        DB::table('lead')
+            ->where('company_id', $id)
+            ->update(['assigned_to' => $userId]);
+        return response()->json(['success' => true]);
+    }
+
+    public function getSalesReps()
+    {
+        $users = DB::table('users')
+            ->select('id', 'name', 'email')
+            ->where('user_type', 4)
+            ->get();
+        return response()->json(['users' => $users]);
+    }
 }

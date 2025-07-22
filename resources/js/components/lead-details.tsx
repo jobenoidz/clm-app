@@ -11,6 +11,7 @@ interface AvailedItem {
 //     availed: Array<Object>,
 //     status: Object
 // }
+import type { Lead } from '../pages/leads';
 
 export default function LeadDetailsModal({ leadDetails, onClose }) {
     const lead = leadDetails

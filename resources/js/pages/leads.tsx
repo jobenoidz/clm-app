@@ -18,6 +18,21 @@ export interface Lead {
     assigned_user_name?: string;
     assigned_to?: number;
     assigned_user_email?: string;
+    // Add any additional fields the modal uses, e.g.:
+    address?: string;
+    key_decision_maker?: string;
+    domain?: string;
+    rt_date?: string;
+    source?: string;
+    date_added?: string;
+    initial_contact_date?: string;
+    last_contacted?: string;
+    position?: string;
+    timeline?: string;
+    challenges?: string;
+    remarks?: string;
+    needs?: string;
+    notes?: string;
 }
 
 interface LeadsPageProps {

@@ -8,8 +8,7 @@ const leadFilters = [
     { name: 'For Follow-up', option: 'for_follow-up' },
     { name: 'Interested', option: 'interested' },
     { name: 'Converted', option: 'converted' },
-    { name: 'Rejected', option: 'rejected' },
-    { name: 'Lost', option: 'lost' }
+    { name: 'Rejected/Lost', option: 'rejected_or_lost' },
 ];
 
 export default function LeadFilterMenu() {

@@ -145,4 +145,15 @@ class LeadsController extends Controller
             return redirect()->back()->with('error', 'Failed to add lead.');
         }
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $status = $request->input('status');
+        $statusId = DB::table('lead_status')->where('status_name', $status)->value('id');
+        if ($statusId) {
+            DB::table('lead')->where('company_id', $id)->update(['status' => $statusId]);
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'Invalid status'], 400);
+    }
 }

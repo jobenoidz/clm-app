@@ -16,9 +16,15 @@ interface ServiceItem {
     sq_num: string;
     group_name: string;
     service_name: string;
+    proposal_date: string;
+    project_year: number;
+    contract_duration: string;
     status: string;
     contract_type: string;
     date_signed: string;
+    project_status: string;
+    license_count: string;
+    availment_status: string;
 }
 
 interface ServicesModalDetailsProps {
@@ -102,13 +108,19 @@ export default function ServicesModalDetails({ clientName, services, onServicesC
                                                         <h4 className="font-bold mb-2">Additional Details</h4>
                                                         <div className="grid grid-cols-2 gap-4">
                                                             <div>
-                                                                <p><span className="font-semibold">Service ID:</span> {groupItem.id}</p>
-                                                                <p><span className="font-semibold">SQ Number:</span> {groupItem.sq_num}</p>
-                                                                <p><span className="font-semibold">Status:</span> {groupItem.status}</p>
+                                                                <p><span className="font-semibold">Project Year:</span> {groupItem.project_year}</p>
+                                                                <p><span className="font-semibold">Proposal Date:</span> {groupItem.proposal_date}</p>
+                                                                <p><span className="font-semibold">Date Signed:</span> {groupItem.date_signed}</p>
+                                                                <p><span className="font-semibold">Contract Duration:</span> {groupItem.contract_duration}</p>
+                                                                <p><span className="font-semibold">Contract Type:</span> {groupItem.contract_type}</p>
                                                             </div>
                                                             <div>
-                                                                <p><span className="font-semibold">Contract Type:</span> {groupItem.contract_type}</p>
-                                                                <p><span className="font-semibold">Date Signed:</span> {groupItem.date_signed}</p>
+                                                                <p><span className="font-semibold">Project Status:</span> {groupItem.project_status}</p>
+                                                                <p><span className="font-semibold">Agreement Status:</span> {groupItem.status}</p>
+                                                            </div>
+                                                            <div>
+                                                                <p><span className="font-semibold">License Count:</span> {groupItem.license_count}</p>
+                                                                <p><span className="font-semibold">Availment Status:</span> {groupItem.availment_status}</p>
                                                             </div>
                                                         </div>
                                                         <div className="mt-4 flex space-x-2">

@@ -15,7 +15,7 @@ class LeadsController extends Controller
         //status is nullable
         $leads = DB::table('company as c')
             ->join('contact as p', 'c.contact_id', '=', 'p.id')
-            ->join('lead as l', 'c.id', '=', 'l.company_id')
+            ->join('leads as l', 'c.id', '=', 'l.company_id')
             ->join('lead_status as s', 'l.status', '=', 's.id')
             ->select(
                 'c.id',
@@ -24,7 +24,7 @@ class LeadsController extends Controller
                 'p.work_email',
                 'p.work_phone',
                 's.status_name as status',
-                'l.assigned_to',
+                'c.assigned_to',
             )
             ->where('c.type', 'LEAD')
             ->when($status !== 'all', function ($query) use ($status) {
@@ -42,7 +42,7 @@ class LeadsController extends Controller
             ->orderBy('c.company_name', 'asc')
             ->get();
 
-        // Log::info('LEADS FETCH', ['leads' => $leads]);
+        Log::info('LEADS FETCH', ['leads' => $leads]);
 
         return Inertia::render('leads', [
             'leads' => $leads
@@ -52,10 +52,10 @@ class LeadsController extends Controller
     public function getLeadDetails($id)
     {
         $lead = DB::table('company as c')
-            ->join('lead as l', 'l.company_id', '=', 'c.id', 'inner')
+            ->join('leads as l', 'l.company_id', '=', 'c.id', 'inner')
             ->join('lead_status as s', 'l.status', '=', 's.id')
             ->join('contact as p', 'p.id', '=', 'c.contact_id', 'inner')
-            ->leftJoin('users as u', 'l.assigned_to', '=', 'u.id')
+            ->leftJoin('users as u', 'c.assigned_to', '=', 'u.id')
             ->select(
                 'c.id',
                 'c.company_name',
@@ -72,7 +72,7 @@ class LeadsController extends Controller
                 'p.position',
                 'p.work_email',
                 'p.work_phone',
-                'l.assigned_to',
+                'c.assigned_to',
                 'u.name as assigned_user_name',
                 'u.email as assigned_user_email',
                 'l.timeline',
@@ -119,7 +119,7 @@ class LeadsController extends Controller
 
             ]);
 
-            DB::table('lead')->insert([
+            DB::table('leads')->insert([
                 'company_id' => $companyId,
                 'key_decision_maker' => $request->input('key_decision_maker'),
                 'domain' => $request->input('domain'),
@@ -151,7 +151,7 @@ class LeadsController extends Controller
         $status = $request->input('status');
         $statusId = DB::table('lead_status')->where('status_name', $status)->value('id');
         if ($statusId) {
-            DB::table('lead')->where('company_id', $id)->update(['status' => $statusId]);
+            DB::table('leads')->where('company_id', $id)->update(['status' => $statusId]);
             return response()->json(['success' => true]);
         }
         return response()->json(['success' => false, 'message' => 'Invalid status'], 400);
@@ -160,8 +160,8 @@ class LeadsController extends Controller
     public function assignUser(Request $request, $id)
     {
         $userId = $request->input('user_id');
-        DB::table('lead')
-            ->where('company_id', $id)
+        DB::table('company')
+            ->where('id', $id)
             ->update(['assigned_to' => $userId]);
         return response()->json(['success' => true]);
     }

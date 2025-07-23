@@ -50,7 +50,7 @@ class ClientsController extends Controller
             ->orderBy('c.company_name', 'asc')
             ->get();
 
-        // Log::info('CLIENT FETCH', ['clients' => $clients]);
+        Log::info('CLIENT FETCH', ['clients' => $clients]);
 
         return Inertia::render('clients', [
             'clients' => $clients
@@ -62,10 +62,14 @@ class ClientsController extends Controller
         $client = DB::table('company as c')
             ->join('client as cl', 'cl.company_id', '=', 'c.id', 'inner')
             ->join('contact as p', 'p.id', '=', 'c.contact_id', 'inner')
+            ->leftJoin('users as u', 'u.id', '=', 'c.assigned_to')
             ->select(
                 'c.id',
                 'c.company_name',
                 'c.address',
+                'c.assigned_to',
+                'u.name as assigned_user_name',
+                'u.email as assigned_user_email',
                 'cl.date_added',
                 'cl.category',
                 'cl.organization',

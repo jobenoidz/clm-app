@@ -60,7 +60,7 @@ const LeadUpdateExtension: React.FC<LeadUpdateExtensionProps> = ({ isOpen, onClo
                             const rep = salesReps.find(r => r.id === selectedId);
                             if (selectedId && rep) {
                                 onAssign(selectedId, rep);
-                                window.location.reload();
+                                // window.location.reload();
                             }
                         }}
                         className="bg-orange-500 text-white font-bold px-10 py-3 rounded-xl text-lg shadow hover:bg-orange-600"

@@ -6,14 +6,17 @@ import ServicesModalDetails from './client-services';
 interface ClientType {
     id: number;
     company_name: string;
-    address: string;
+    address?: string;
     full_name: string;
     position?: string;
     work_email?: string;
     work_phone?: string;
-    date_added: string;
+    date_added?: string;
     category?: string;
     organization?: string;
+    assigned_to?: any;
+    assigned_user_name: string;
+    assigned_user_email: string;
     org_head?: string;
     school_head?: string;
     head_email?: string;
@@ -88,6 +91,20 @@ export default function ClientDetailsModal({ clientDetails, status, onClose }: C
                             <div className="flex gap-4">
                                 <p className="font-medium w-32">Work Phone:</p>
                                 <p>{client.work_phone || 'Not specified'}</p>
+                            </div>
+                            <div className="flex flex-col gap-4 mt-10">
+                                <p className="font-medium">Person In Charge:</p>
+                                {client.assigned_to ? (
+                                    <div className="w-full h-24 flex flex-col items-center justify-center bg-white border-2 border-solid border-gray-400 rounded-lg mt-2 mb-4">
+                                        <span className="text-lg font-semibold">{client.assigned_user_name}</span>
+                                        <span className="text-sm text-gray-500">{client.assigned_user_email}</span>
+                                        <span>test</span>
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-24 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-lg mt-2 mb-4">
+                                        <span className="text-lg text-gray-400">No Assigned Manager</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <span className='border-primary md:border-r-2 border-r-0' />

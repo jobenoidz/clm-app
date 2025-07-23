@@ -13,6 +13,7 @@ interface Client {
     full_name: string;
     work_email: string;
     work_phone: string;
+    assigned_to: string;
     status: string;
 }
 

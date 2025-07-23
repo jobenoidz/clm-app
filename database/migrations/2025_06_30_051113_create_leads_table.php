@@ -17,12 +17,11 @@ return new class extends Migration {
             $table->text('description');
             $table->timestamps();
         });
-        Schema::create('lead', function (Blueprint $table) {
+        Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('company');
             $table->date('date_added');
             $table->date('rt_date');
-            $table->foreignId('assigned_to')->nullable()->constrained('users');
             $table->foreignId('status')->constrained('lead_status');
             $table->text('recommended_services')->nullable();
             $table->text('key_decision_maker')->nullable();

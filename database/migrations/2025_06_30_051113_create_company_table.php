@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->text('address');
             $table->enum('type', ['CLIENT', 'LEAD'])->default('LEAD');
             $table->foreignId('contact_id')->constrained('contact');
-            $table->foreignId('assigned_to')->constrained('users');
+            $table->foreignId('assigned_to')->nullable()->constrained('users');
             $table->timestamps();
         });
     }

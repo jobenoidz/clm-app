@@ -101,9 +101,15 @@ class ClientsController extends Controller
                 'avail.sq_num',
                 'g.group_name',
                 's.service_name',
+                DB::raw("DATE_FORMAT(avail.proposal_date, '%b.  %e, %Y') as proposal_date"),
+                'avail.project_year as project_year',
+                'avail.contract_duration as contract_duration',
                 'avail.agreement_status as status',
                 'avail.contract_type',
-                DB::raw("DATE_FORMAT(avail.date_signed, '%b.  %e, %Y') as date_signed")
+                DB::raw("DATE_FORMAT(avail.date_signed, '%b.  %e, %Y') as date_signed"),
+                'avail.project_status as project_status',
+                'avail.license_count as license_count',
+                'avail.availment_status as availment_status',
             ])
             ->where('avail.client_id', $clientId)
             ->get()

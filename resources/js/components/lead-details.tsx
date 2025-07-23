@@ -1,14 +1,34 @@
 import { Circle, MapPin, X } from 'lucide-react';
 
-// interface ClientDetailsData {
-//     client: Object,
-//     availed: Array<Object>,
-//     status: Object
-// }
+import { useState } from 'react';
+import LeadUpdateExtension from './lead-update-extension';
+import type { Lead } from '../pages/leads';
 
-export default function LeadDetailsModal({ leadDetails, onClose }) {
-    const lead = leadDetails
-    if (!lead) return null
+interface LeadDetailsModalProps {
+    leadDetails: Lead;
+    onClose: () => void;
+}
+
+export default function LeadDetailsModal({ leadDetails, onClose }: LeadDetailsModalProps) {
+    const lead = leadDetails;
+    const [isUpdateExtensionOpen, setIsUpdateExtensionOpen] = useState(false);
+
+    const handleAssign = async (userId: number, rep: { id: number; name: string; email: string }) => {
+        // Directly update the DB
+        await fetch(`/lead/${lead.id}/assign-user`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
+            },
+            body: JSON.stringify({ user_id: userId }),
+        });
+        setIsUpdateExtensionOpen(false);
+        // Optionally, refresh data or show a success message
+    };
+
+    if (!lead) return null;
 
     return (
         <>
@@ -130,30 +150,47 @@ export default function LeadDetailsModal({ leadDetails, onClose }) {
                         <div className='border-primary border-r-2 mr-3 ml-3' />
 
                         {/* Right Column (Scrollable) */}
-                        <div className="flex flex-col overflow-y-auto max-h-[50vh] w-full"> {/* Adjust max-height as needed */}
-                            <div className='mb-5'>
-                                <h1 className='font-bold mr-5'>Due Date: {lead.timeline}</h1>
+                        <div className="flex flex-col overflow-y-auto max-h-[50vh] w-full">
+                            <div className="flex flex-col overflow-y-auto max-h-[50vh] w-full"> {/* Adjust max-height as needed */}
+                                <div className='mb-5'>
+                                    <h1 className='font-bold mr-5'>Due Date: {lead.timeline}</h1>
+                                </div>
+                                <div className='mb-5'>
+                                    <h1 className='font-bold'>Challenges</h1>
+                                    <p className='ml-4'>{lead.challenges}</p>
+                                </div>
+                                <div className='mb-5'>
+                                    <h1 className='font-bold'>Remarks</h1>
+                                    <p className='ml-4'>{lead.remarks}</p>
+                                </div>
+                                <div className='mb-5'>
+                                    <h1 className='font-bold'>Needs</h1>
+                                    <p className='ml-4'>{lead.needs}</p>
+                                </div>
+                                <div className='mb-5'>
+                                    <h1 className='font-bold'>Notes</h1>
+                                    <p className='ml-4'>{lead.notes}</p>
+                                </div>
                             </div>
-                            <div className='mb-5'>
-                                <h1 className='font-bold'>Challenges</h1>
-                                <p className='ml-4'>{lead.challenges}</p>
-                            </div>
-                            <div className='mb-5'>
-                                <h1 className='font-bold'>Remarks</h1>
-                                <p className='ml-4'>{lead.remarks}</p>
-                            </div>
-                            <div className='mb-5'>
-                                <h1 className='font-bold'>Needs</h1>
-                                <p className='ml-4'>{lead.needs}</p>
-                            </div>
-                            <div className='mb-5'>
-                                <h1 className='font-bold'>Notes</h1>
-                                <p className='ml-4'>{lead.notes}</p>
+                            <div className='flex justify-end'>
+                                <button
+                                    className='bg-orange-500 text-white px-7 py-1/2 rounded-full cursor-pointer mt-5'
+                                    onClick={() => setIsUpdateExtensionOpen(true)}
+                                >
+                                    {lead.assigned_to ? 'Re-assign' : 'Assign'}
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div >
+            <LeadUpdateExtension
+                isOpen={isUpdateExtensionOpen}
+                onClose={() => setIsUpdateExtensionOpen(false)}
+                onAssign={handleAssign}
+                currentAssignedId={lead.assigned_to}
+                fromDetails={true}
+            />
         </>
     );
 }

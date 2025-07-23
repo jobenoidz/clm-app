@@ -11,9 +11,10 @@ interface LeadUpdateExtensionProps {
     onClose: () => void;
     onAssign: (userId: number, rep: SalesRep) => void;
     currentAssignedId?: number;
+    fromDetails?: boolean;
 }
 
-const LeadUpdateExtension: React.FC<LeadUpdateExtensionProps> = ({ isOpen, onClose, onAssign, currentAssignedId }) => {
+const LeadUpdateExtension: React.FC<LeadUpdateExtensionProps> = ({ isOpen, onClose, onAssign, currentAssignedId, fromDetails }) => {
     const [salesReps, setSalesReps] = useState<SalesRep[]>([]);
     const [selectedId, setSelectedId] = useState<number | null>(currentAssignedId || null);
 
@@ -57,7 +58,10 @@ const LeadUpdateExtension: React.FC<LeadUpdateExtensionProps> = ({ isOpen, onClo
                     <button
                         onClick={() => {
                             const rep = salesReps.find(r => r.id === selectedId);
-                            if (selectedId && rep) onAssign(selectedId, rep);
+                            if (selectedId && rep) {
+                                onAssign(selectedId, rep);
+                                window.location.reload();
+                            }
                         }}
                         className="bg-orange-500 text-white font-bold px-10 py-3 rounded-xl text-lg shadow hover:bg-orange-600"
                         disabled={selectedId === null}

@@ -9,9 +9,7 @@ interface LeadUpdateProps {
 }
 
 export default function LeadUpdate({ leadDetails, onClose }: LeadUpdateProps) {
-    const lead = leadDetails;
-    if (!lead) return null;
-
+    // Move hooks to top level
     const statusOptions = [
         'New',
         'Contacted',
@@ -21,13 +19,15 @@ export default function LeadUpdate({ leadDetails, onClose }: LeadUpdateProps) {
         'Rejected',
         'Lost',
     ];
-    const [selectedStatus, setSelectedStatus] = useState(lead.status);
+    const [selectedStatus, setSelectedStatus] = useState(leadDetails.status);
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [assignedUser, setAssignedUser] = useState({
-        assigned_to: lead.assigned_to,
-        assigned_user_name: lead.assigned_user_name,
-        assigned_user_email: lead.assigned_user_email,
+        assigned_to: leadDetails.assigned_to,
+        assigned_user_name: leadDetails.assigned_user_name,
+        assigned_user_email: leadDetails.assigned_user_email,
     });
+    const lead = leadDetails;
+    if (!lead) return null;
 
     const handleSave = async () => {
         await fetch(`/lead/${lead.id}/update-status`, {
@@ -51,21 +51,6 @@ export default function LeadUpdate({ leadDetails, onClose }: LeadUpdateProps) {
         });
         onClose();
         window.location.reload();
-    };
-
-    const handleAssign = async (userId: number) => {
-        await fetch(`/lead/${lead.id}/assign-user`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content || '',
-            },
-            body: JSON.stringify({ user_id: userId }),
-        });
-        setIsAssignModalOpen(false);
-        // Find the assigned rep from the extension modal's list
-        // We'll pass a callback to LeadUpdateExtension to provide the rep info
     };
 
     const handleAssignWithRep = (userId: number, rep: {id: number, name: string, email: string}) => {

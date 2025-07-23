@@ -1,5 +1,3 @@
-import { router } from "@inertiajs/react";
-
 
 
 export default function AddClientModal() {

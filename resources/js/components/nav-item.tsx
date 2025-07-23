@@ -7,7 +7,7 @@ interface NavLinkProps {
     children: ReactNode;
 }
 
-export default function NavLink({ href, active, children, ...props }: NavLinkProps) {
+export default function NavLink({ href, active, children }: NavLinkProps) {
     return (
         <Link
             href={href}

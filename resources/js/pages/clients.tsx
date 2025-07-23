@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import AppLayout from '../layouts/app-layout';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Building, ChevronRight, Contact, Download, ListFilter, Plus, User } from 'lucide-react';
 import ClientDetailsModal from '../components/client-details';
 import { Button } from '@/components/ui/button';
 import ClientFilterMenu from '@/components/client-filter';
-import { secureHeapUsed } from 'crypto';
-import { Input } from '@/components/ui/input';
 import AddClientModal from '@/components/client-add';
 
 interface Client {
@@ -24,8 +22,9 @@ interface ClientsPageProps {
 
 export default function ClientsPage({ clients }: ClientsPageProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedClient, setSelectedClient] = useState<any>(null);
-    const [clientStatus, setClientStatus] = useState<string | null>(null);
+    // selectedClient should have a 'client' property for ClientDetailsModal
+    const [selectedClient, setSelectedClient] = useState<{ client: Client } | null>(null);
+    const [clientStatus, setClientStatus] = useState<string>('');
 
     const openModal = async (id: number, status: string) => {
         try {
@@ -43,7 +42,7 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
 
     const closeModal = () => {
         setSelectedClient(null);
-        setClientStatus(null);
+        setClientStatus(''); // Use empty string instead of null
         setIsModalOpen(false);
     }
 
@@ -53,9 +52,6 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
         setIsAddClientOpen(true);
     }
 
-    const closeAddClient = () => {
-        setIsAddClientOpen(false);
-    }
     return (
         <>
             <Head title="Client Contacts" />
@@ -132,9 +128,7 @@ export default function ClientsPage({ clients }: ClientsPageProps) {
                 }
 
                 {isAddClientOpen && (
-                    <AddClientModal
-                        onAddClientClose={closeAddClient}
-                    />
+                    <AddClientModal />
                 )
                 }
             </AppLayout >

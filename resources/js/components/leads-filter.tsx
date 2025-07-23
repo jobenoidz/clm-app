@@ -1,5 +1,4 @@
 import { Link } from "@inertiajs/react";
-import { useState } from "react";
 
 const leadFilters = [
     { name: 'All', option: 'all' },
@@ -12,7 +11,6 @@ const leadFilters = [
 ];
 
 export default function LeadFilterMenu() {
-    const [isAssignedSelected, setIsAssignedSelected] = useState(false);
 
     return (
         <>
@@ -34,27 +32,19 @@ export default function LeadFilterMenu() {
                         </Link>
                     );
                 })}
-
-
             </nav>
             {/* <nav>
                 <Link
                     key={'assigned'}
                     href={`/leads-new-assigned`}
-                    className={`transition-all text-[13px] select-none rounded-3xl p-1 w-1/8 ${true
-                        ? 'bg-orange-400 text-white font-bold'
-                        : 'hover:bg-orange-300'
-                        }`}
+                    className={`transition-all text-[13px] select-none rounded-3xl p-1 w-1/8` + (route().current('leads', { status: 'assigned' }) ? ' bg-orange-400 text-white font-bold' : ' hover:bg-orange-300')}
                 >
                     Assigned
                 </Link>
                 <Link
                     key={'t'}
                     href={`/leads-new-assigned`}
-                    className={`transition-all text-[13px] select-none rounded-3xl p-1 w-1/8 ${true
-                        ? 'bg-orange-400 text-white font-bold'
-                        : 'hover:bg-orange-300'
-                        }`}
+                    className={`transition-all text-[13px] select-none rounded-3xl p-1 w-1/8` + (route().current('leads', { status: 'unassigned' }) ? ' bg-orange-400 text-white font-bold' : ' hover:bg-orange-300')}
                 >
                     Unassigned
                 </Link>

@@ -1,10 +1,9 @@
-import { ChevronDown, ChevronUp, Circle, Ham, MapPin, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -12,21 +11,26 @@ import {
 } from "@/components/ui/table";
 
 
-interface AvailedItem {
-    group_id: number,
-    group_name: string
+interface ServiceItem {
+    id: number;
+    sq_num: string;
+    group_name: string;
+    service_name: string;
+    status: string;
+    contract_type: string;
+    date_signed: string;
 }
 
-// interface ClientDetailsData {
-//     client: Object,
-//     availed: Array<Object>,
-//     status: Object
-// }
+interface ServicesModalDetailsProps {
+    clientName: string;
+    services: ServiceItem[];
+    onServicesClose: () => void;
+}
 
-export default function ServicesModalDetails({ clientName, services, onServicesClose }) {
-    if (!services) return null
+export default function ServicesModalDetails({ clientName, services, onServicesClose }: ServicesModalDetailsProps) {
+    // Move hook to top level
     const [expandedRows, setExpandedRows] = useState<number[]>([]);
-
+    if (!services) return null;
 
     const toggleRow = (id: number) => {
         setExpandedRows(prev =>
@@ -68,7 +72,7 @@ export default function ServicesModalDetails({ clientName, services, onServicesC
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {services.map((groupItem) => (
+                                {services.map((groupItem: ServiceItem) => (
                                     <>
                                         <TableRow
                                             key={groupItem.id}
